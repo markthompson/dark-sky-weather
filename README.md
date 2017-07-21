@@ -37,7 +37,8 @@ We would like you to create a small mobile application, to retrieve weather data
 * Only the happy path will be judged. Error handling is not required, but it would be nice if there was some indication of a failure - eg. in the case there is no internet connection, we won't think your app is broken
 * Use of frameworks, libraries, and open-source code is allowed, but please reference their use in comments in the code. Please use package management for open source dependencies where suitable. 
 
-##Getting Started  
+##Getting Started
+* Clone this repo and create a personal fork
 * Register for a free API key for darksky.net
 * The API to query is https://api.darksky.net/forecast/{Your_API_key_here}/{latitude},{longitude} | San Diego lat & lon: 32.715736, -117.161087
  
