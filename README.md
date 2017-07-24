@@ -31,7 +31,7 @@ We would like you to create a small mobile application, to retrieve weather data
 
 * App and Other requirements met
 * App Compiles and Runs
-  * Please provide instructions if it can't build directly after cloning, for example, if a script has to run
+    * Please provide instructions if it can't build directly after cloning, for example, if a script has to run
 * Use of suitable design patterns, for example, separation of concerns
 * Best practices regarding commits and git usage
 * API calls do not block the user experience
