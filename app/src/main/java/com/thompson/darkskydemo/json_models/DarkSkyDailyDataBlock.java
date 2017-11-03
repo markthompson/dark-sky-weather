@@ -88,13 +88,13 @@ public class DarkSkyDailyDataBlock {
     private int windGustTime;
     @SerializedName("windBearing")
     @Expose
-    private int windBearing;
+    private double windBearing;
     @SerializedName("cloudCover")
     @Expose
     private double cloudCover;
     @SerializedName("uvIndex")
     @Expose
-    private int uvIndex;
+    private double uvIndex;
     @SerializedName("uvIndexTime")
     @Expose
     private int uvIndexTime;
@@ -229,7 +229,7 @@ public class DarkSkyDailyDataBlock {
         return windGustTime;
     }
 
-    public int getWindBearing() {
+    public double getWindBearing() {
         return windBearing;
     }
 
@@ -237,7 +237,7 @@ public class DarkSkyDailyDataBlock {
         return cloudCover;
     }
 
-    public int getUvIndex() {
+    public double getUvIndex() {
         return uvIndex;
     }
 
