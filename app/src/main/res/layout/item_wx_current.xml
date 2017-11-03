@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wx_current_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#696969">
+
+
+    <LinearLayout
+        android:id="@+id/wx_current_icon_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/wx_current_day_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:text="asdf"/>
+
+        <ImageView
+            android:id="@+id/wx_current_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_sunny"
+            android:tint="@android:color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wx_current_details_layout"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/wx_current_icon_layout">
+
+        <TextView
+            android:id="@+id/wx_current_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:text="it is gonna be sunny today"/>
+
+        <TextView
+            android:id="@+id/wx_current_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:text="78"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
