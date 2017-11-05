@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-
-    <LinearLayout
-        android:id="@+id/wx_day_icon_layout"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:elevation="100dp"
+        card_view:cardCornerRadius="8dp"
+        android:layout_margin="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/wx_day_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:paddingLeft="8dp"
             android:textSize="24sp"
-            android:text="asdf"/>
+            android:text="asdf"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
         <ImageView
             android:id="@+id/wx_day_icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_below="@+id/wx_day_text"
             android:src="@drawable/ic_sunny"/>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/wx_day_details_layout"
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toRightOf="@+id/wx_day_icon_layout">
-
-        <TextView
-            android:id="@+id/wx_day_summary"
+        <LinearLayout
+            android:id="@+id/wx_day_details_layout"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="it is gonna be sunny today"/>
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/wx_day_icon"
+            android:layout_below="@+id/wx_day_text">
 
-        <TextView
-            android:id="@+id/wx_day_temp_hi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="HI: 78"/>
+            <TextView
+                android:id="@+id/wx_day_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="it is gonna be sunny today"/>
 
-        <TextView
-            android:id="@+id/wx_day_temp_lo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="LO: 60"/>
+            <TextView
+                android:id="@+id/wx_day_temp_hi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="HI: 78"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/wx_day_temp_lo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="LO: 60"/>
 
-</RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
