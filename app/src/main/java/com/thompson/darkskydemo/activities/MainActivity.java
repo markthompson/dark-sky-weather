@@ -5,6 +5,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
@@ -13,9 +14,13 @@ import android.widget.Toast;
 
 import com.thompson.darkskydemo.R;
 import com.thompson.darkskydemo.UIHelper;
+import com.thompson.darkskydemo.adapters.DailyDataAdapter;
 import com.thompson.darkskydemo.json_models.DarkSkyCurrentWx;
+import com.thompson.darkskydemo.json_models.DarkSkyDailyDataBlock;
 import com.thompson.darkskydemo.json_models.DarkSkyForecast;
 import com.thompson.darkskydemo.networking.DarkSkyClient;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,33 +34,26 @@ public class MainActivity extends AppCompatActivity {
     private TextView wxCurrentSummaryText;
     private TextView wxCurrentTempText;
 
-    private DarkSkyClient mDarkSkyClient;
-    private DarkSkyForecast mDarkSkyForecast;
+    private ArrayList<DarkSkyDailyDataBlock> mDailyDataList = new ArrayList<>();
     private Location mLoc;
-
-    private DarkSkyClient.DarkSkyCallback mForecastCallback = new DarkSkyClient.DarkSkyCallback() {
-        @Override
-        public void onSuccess(DarkSkyForecast darkSkyForecast, int HTTPCode) {
-            Log.d("TAG", "success: " + darkSkyForecast.toString());
-            MainActivity.this.setCurrentWx(darkSkyForecast.getDarkSkyCurrentWx());
-
-        }
-
-        @Override
-        public void onHttpError(int HTTPCode, String reason) {
-            Log.d("TAG", " code:"+ HTTPCode);
-        }
-
-        @Override
-        public void onIOFailure(Throwable t) {
-            Log.d("TAG", " failure:"+ t.getMessage());
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+
         wxCurrentDayText = (TextView)findViewById(R.id.wx_current_day_text);
         wxCurrentDayText.setText("Now");
         wxCurrentIcon = (ImageView)findViewById(R.id.wx_current_icon);
@@ -73,17 +71,6 @@ public class MainActivity extends AppCompatActivity {
          mLoc = new Location(LocationManager.GPS_PROVIDER);
          mLoc.setLatitude(32.715736);
          mLoc.setLongitude(-117.161087);
-
-    }
-
-    private void getForecast() {
-        DarkSkyClient.getForecast(mLoc.getLatitude(), mLoc.getLongitude(), mForecastCallback );
-    }
-
-    private void setCurrentWx(DarkSkyCurrentWx darkSkyCurrentWx) {
-        wxCurrentIcon = (ImageView)findViewById(R.id.wx_current_icon);
-        wxCurrentSummaryText.setText(darkSkyCurrentWx.getSummary());
-        wxCurrentTempText.setText(UIHelper.temperatureToString(darkSkyCurrentWx.getTemperature()));
     }
 
     @Override
@@ -91,6 +78,39 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         getForecast();
     }
+
+    private void getForecast() {
+        DarkSkyClient.getForecast(mLoc.getLatitude(), mLoc.getLongitude(), mForecastCallback );
+    }
+
+    private void setCurrentWx(DarkSkyCurrentWx darkSkyCurrentWx) {
+        wxCurrentIcon.setImageResource(UIHelper.resourceIdForIconName(darkSkyCurrentWx.getIcon()));
+        wxCurrentSummaryText.setText(darkSkyCurrentWx.getSummary());
+        wxCurrentTempText.setText(UIHelper.temperatureToString(darkSkyCurrentWx.getTemperature()));
+    }
+
+    private DarkSkyClient.DarkSkyCallback mForecastCallback = new DarkSkyClient.DarkSkyCallback() {
+        @Override
+        public void onSuccess(DarkSkyForecast darkSkyForecast, int HTTPCode) {
+            //Log.d("TAG", "success: " + darkSkyForecast.toString());
+            MainActivity.this.setCurrentWx(darkSkyForecast.getDarkSkyCurrentWx());
+            mDailyDataList = darkSkyForecast.getDarkSkyDailyWx().getDailyDataBlocks();
+            // specify an adapter
+            mAdapter = new DailyDataAdapter(mDailyDataList);
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onHttpError(int HTTPCode, String reason) {
+            Log.d("TAG", " code:"+ HTTPCode);
+        }
+
+        @Override
+        public void onIOFailure(Throwable t) {
+            Log.d("TAG", " failure:"+ t.getMessage());
+        }
+    };
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

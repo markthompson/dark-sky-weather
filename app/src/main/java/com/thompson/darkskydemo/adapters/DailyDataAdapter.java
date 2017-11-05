@@ -1,6 +1,7 @@
 package com.thompson.darkskydemo.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
     private ArrayList<DarkSkyDailyDataBlock> mDailyData;
     private SimpleDateFormat mDateFormat;
     public DailyDataAdapter(ArrayList<DarkSkyDailyDataBlock> dataSet) {
-        mDateFormat = new SimpleDateFormat("EEE");
+        mDateFormat = new SimpleDateFormat("dd/MM");
         mDailyData = dataSet;
     }
 
@@ -40,32 +41,34 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
         return viewHolder;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
+
         DarkSkyDailyDataBlock dailyDataBlock = mDailyData.get(position);
-        Date date = new Date(dailyDataBlock.getTime());
-        holder.wxDayText.setText(mDateFormat.format(date));
+
+        String dayText = "";
+        if(position == 0 ) {
+            dayText = "Today";
+        } else if(position == 1) {
+            dayText = "Tomorrow";
+        } else {
+            Date date = new Date(dailyDataBlock.getTime());
+            dayText =mDateFormat.format(date);
+            Log.d("TAG", "Adapter time: " + dailyDataBlock.getTime());
+        }
+        holder.wxDayText.setText(dayText);
         holder.wxSummaryText.setText(dailyDataBlock.getSummary());
         holder.wxIconImage.setImageResource(UIHelper.resourceIdForIconName(dailyDataBlock.getIcon()));
-        holder.wxLoTempText.setText(Double.toString(dailyDataBlock.getTemperatureLow()));
-        holder.wxHiTempText.setText(Double.toString(dailyDataBlock.getTemperatureHigh()));
+        holder.wxHiTempText.setText("HI " + UIHelper.temperatureToString(dailyDataBlock.getTemperatureHigh()));
+        holder.wxLoTempText.setText("LO " +UIHelper.temperatureToString(dailyDataBlock.getTemperatureLow()));
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDailyData.size();
     }
 
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView wxDayText;
         public ImageView wxIconImage;
         public TextView wxSummaryText;
