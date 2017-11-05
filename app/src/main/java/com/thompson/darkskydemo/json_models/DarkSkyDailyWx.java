@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Fields auto-gen'd with http://www.jsonschema2pojo.org/
@@ -23,7 +23,7 @@ public class DarkSkyDailyWx {
 
     @SerializedName("data")
     @Expose
-    private List<DarkSkyDailyDataBlock> data = null;
+    private ArrayList<DarkSkyDailyDataBlock> data = null;
 
     public String getSummary() {
         return summary;
@@ -33,7 +33,7 @@ public class DarkSkyDailyWx {
         return icon;
     }
 
-    public List<DarkSkyDailyDataBlock> getData() {
+    public ArrayList<DarkSkyDailyDataBlock> getDailyDataBlocks() {
         return data;
     }
 

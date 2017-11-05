@@ -67,6 +67,10 @@ public class DarkSkyForecast {
         return darkSkyCurrentWx;
     }
 
+    public DarkSkyDailyWx getDarkSkyDailyWx() {
+        return darkSkyDailyWx;
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);
