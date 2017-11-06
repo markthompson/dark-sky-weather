@@ -13,7 +13,7 @@ public class DarkSkyDailyDataBlock {
 
     @SerializedName("time")
     @Expose
-    private int time;
+    private long time;
     @SerializedName("summary")
     @Expose
     private String summary;
@@ -129,7 +129,7 @@ public class DarkSkyDailyDataBlock {
     @Expose
     private int apparentTemperatureMaxTime;
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
