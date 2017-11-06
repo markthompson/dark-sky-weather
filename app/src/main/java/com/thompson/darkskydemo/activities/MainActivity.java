@@ -1,5 +1,6 @@
 package com.thompson.darkskydemo.activities;
 
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,8 @@ import com.thompson.darkskydemo.networking.DarkSkyClient;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String KEY_STRING_DAILYBLOCK = "KEY_STRING_DAILYBLOCK";
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.setCurrentWx(darkSkyForecast.getDarkSkyCurrentWx());
             mDailyDataList = darkSkyForecast.getDarkSkyDailyWx().getDailyDataBlocks();
             // specify an adapter
-            mAdapter = new DailyDataAdapter(mDailyDataList);
+            mAdapter = new DailyDataAdapter(mDailyDataList, mRowClickListener);
             mRecyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
         }
@@ -112,9 +116,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    private DailyDataAdapter.RowClickListener mRowClickListener = new DailyDataAdapter.RowClickListener() {
+        @Override
+        public void onClick(View view, int position) {
+            Toast.makeText(MainActivity.this, "Position=" + position, Toast.LENGTH_SHORT).show();
+            startDetailActivity(mDailyDataList.get(position));
+        }
+    };
+
+    private void startDetailActivity(DarkSkyDailyDataBlock dailyDataBlock) {
+        Intent intent = new Intent(MainActivity.this, WeatherDetailActivity.class);
+        intent.putExtra(KEY_STRING_DAILYBLOCK, dailyDataBlock.toString());
+        startActivity(intent);
     }
-
-
 }
