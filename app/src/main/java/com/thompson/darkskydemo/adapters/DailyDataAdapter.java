@@ -25,17 +25,19 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
 
     private ArrayList<DarkSkyDailyDataBlock> mDailyData;
     private SimpleDateFormat mDateFormat;
+    RowClickListener mListener;
 
-    public DailyDataAdapter(ArrayList<DarkSkyDailyDataBlock> dataSet) {
+    public DailyDataAdapter(ArrayList<DarkSkyDailyDataBlock> dataSet, RowClickListener listener) {
         mDateFormat = new SimpleDateFormat("EEE MMM-dd");
         mDailyData = dataSet;
+        mListener = listener;
     }
 
     @Override
     public DailyDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.item_wx_daily, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
+        ViewHolder viewHolder = new ViewHolder(v, mListener);
         return viewHolder;
     }
 
@@ -66,7 +68,7 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
         return mDailyData.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView wxDayText;
         public ImageView wxIconImage;
         public TextView wxSummaryText;
@@ -74,14 +76,31 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
         public TextView wxLoTempText;
         public View itemLayout;
 
-        public ViewHolder(View v) {
+        RowClickListener mListener;
+
+        public ViewHolder(View v, RowClickListener listener) {
             super(v);
+            mListener = listener;
             itemLayout = v;
             wxDayText = v.findViewById(R.id.wx_day_text);
             wxIconImage = v.findViewById(R.id.wx_day_icon);
             wxSummaryText = v.findViewById(R.id.wx_day_summary);
             wxHiTempText = v.findViewById(R.id.wx_day_temp_hi);
             wxLoTempText = v.findViewById(R.id.wx_day_temp_lo);
+            v.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            mListener.onClick(view, getAdapterPosition());
+        }
+    }
+
+    /**
+     * Inspired by:
+     * https://android.jlelse.eu/click-listener-for-recyclerview-adapter-2d17a6f6f6c9
+     */
+    public interface RowClickListener {
+        void onClick(View view, int position);
     }
 }
