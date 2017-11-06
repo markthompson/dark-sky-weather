@@ -1,7 +1,6 @@
 package com.thompson.darkskydemo.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +25,15 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
 
     private ArrayList<DarkSkyDailyDataBlock> mDailyData;
     private SimpleDateFormat mDateFormat;
+
     public DailyDataAdapter(ArrayList<DarkSkyDailyDataBlock> dataSet) {
-        mDateFormat = new SimpleDateFormat("dd/MM");
+        mDateFormat = new SimpleDateFormat("EEE MMM-dd");
         mDailyData = dataSet;
     }
 
     @Override
     public DailyDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        LayoutInflater inflater = LayoutInflater.from(
-                parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.item_wx_daily, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -46,16 +44,16 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
 
         DarkSkyDailyDataBlock dailyDataBlock = mDailyData.get(position);
 
-        String dayText = "";
+        String dayText;
         if(position == 0 ) {
             dayText = "Today";
         } else if(position == 1) {
             dayText = "Tomorrow";
         } else {
-            Date date = new Date(dailyDataBlock.getTime());
-            dayText =mDateFormat.format(date);
-            Log.d("TAG", "Adapter time: " + dailyDataBlock.getTime());
+            dayText = mDateFormat.format(new Date(dailyDataBlock.getTime() * 1000));
+            //Log.d("TAG", "Time: " + dailyDataBlock.getTime() + "|format:" + dayText);
         }
+
         holder.wxDayText.setText(dayText);
         holder.wxSummaryText.setText(dailyDataBlock.getSummary());
         holder.wxIconImage.setImageResource(UIHelper.resourceIdForIconName(dailyDataBlock.getIcon()));
@@ -86,7 +84,4 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
             wxLoTempText = v.findViewById(R.id.wx_day_temp_lo);
         }
     }
-
-
-
 }
