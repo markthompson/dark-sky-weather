@@ -1,5 +1,8 @@
 package com.thompson.darkskydemo;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Mark Thompson Jr.
  */
@@ -8,6 +11,11 @@ public class UIHelper {
 
     public static String temperatureToString(double temperature) {
         return (int)temperature + "\u00B0";
+    }
+
+    public static String percentageToString(double percentage) {
+        double value = percentage * 100;
+        return (int)value + "\u0025";
     }
 
     public static int resourceIdForIconName(String name) {
@@ -35,5 +43,10 @@ public class UIHelper {
             default:
                 return R.drawable.ic_sunny;
         }
+    }
+
+    public static String unixTimeToString(long unixTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM-dd");
+        return sdf.format(new Date(unixTime * 1000));
     }
 }
