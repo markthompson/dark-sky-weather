@@ -32,6 +32,12 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
         mListener = listener;
     }
 
+    public void updateDataSet(ArrayList<DarkSkyDailyDataBlock> dataSet) {
+        mDailyData.clear();
+        mDailyData.addAll(dataSet);
+        notifyDataSetChanged();
+    }
+
     @Override
     public DailyDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
