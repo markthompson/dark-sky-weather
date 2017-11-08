@@ -13,7 +13,6 @@ import com.thompson.darkskydemo.json_models.DarkSkyDailyDataBlock;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Mark Thompson Jr.
@@ -52,7 +51,7 @@ public class DailyDataAdapter extends RecyclerView.Adapter<DailyDataAdapter.View
         } else if(position == 1) {
             dayText = "Tomorrow";
         } else {
-            dayText = mDateFormat.format(new Date(dailyDataBlock.getTime() * 1000));
+            dayText = UIHelper.unixTimeToString(dailyDataBlock.getTime());
             //Log.d("TAG", "Time: " + dailyDataBlock.getTime() + "|format:" + dayText);
         }
 
