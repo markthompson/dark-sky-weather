@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thompson.darkskydemo.R;
 import com.thompson.darkskydemo.UIHelper;
@@ -24,13 +24,21 @@ import com.thompson.darkskydemo.networking.DarkSkyClient;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Mark Thompson Jr.
+ *
+ * RecyclerView impl inspired by impl from Android dev docs
+ * https://developer.android.com/training/material/lists-cards.html
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String KEY_STRING_DAILYBLOCK = "KEY_STRING_DAILYBLOCK";
+    public static final String KEY_STATE_LAYOUT_MANAGER = "KEY_STATE_LAYOUT_MANAGER";
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Parcelable mLayoutManagerState;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private TextView wxCurrentDayText;
@@ -38,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView wxCurrentSummaryText;
     private TextView wxCurrentTempText;
 
-    private ArrayList<DarkSkyDailyDataBlock> mDailyDataList = new ArrayList<>();
+    private ArrayList<DarkSkyDailyDataBlock> mDailyDataList;// = new ArrayList<>();
     private Location mLoc;
 
     @Override
@@ -55,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-
 
         wxCurrentDayText = (TextView)findViewById(R.id.wx_current_day_text);
         wxCurrentDayText.setText("Now");
@@ -75,15 +81,19 @@ public class MainActivity extends AppCompatActivity {
          mLoc = new Location(LocationManager.GPS_PROVIDER);
          mLoc.setLatitude(32.715736);
          mLoc.setLongitude(-117.161087);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getForecast();
+        /*
+            Force reload of recyclerview on screen rotations
+         */
+        if(mDailyDataList == null) {
+            getForecast();
+        }
     }
 
     private void getForecast() {
+        if(!mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
         DarkSkyClient.getForecast(mLoc.getLatitude(), mLoc.getLongitude(), mForecastCallback );
     }
 
@@ -94,9 +104,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private DarkSkyClient.DarkSkyCallback mForecastCallback = new DarkSkyClient.DarkSkyCallback() {
+
         @Override
         public void onSuccess(DarkSkyForecast darkSkyForecast, int HTTPCode) {
-            //Log.d("TAG", "success: " + darkSkyForecast.toString());
+            mSwipeRefreshLayout.setRefreshing(false);
             MainActivity.this.setCurrentWx(darkSkyForecast.getDarkSkyCurrentWx());
             mDailyDataList = darkSkyForecast.getDarkSkyDailyWx().getDailyDataBlocks();
             // specify an adapter
@@ -107,11 +118,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onHttpError(int HTTPCode, String reason) {
+            mSwipeRefreshLayout.setRefreshing(false);
             Log.d("TAG", " code:"+ HTTPCode);
         }
 
         @Override
         public void onIOFailure(Throwable t) {
+            mSwipeRefreshLayout.setRefreshing(false);
             Log.d("TAG", " failure:"+ t.getMessage());
         }
     };
@@ -119,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
     private DailyDataAdapter.RowClickListener mRowClickListener = new DailyDataAdapter.RowClickListener() {
         @Override
         public void onClick(View view, int position) {
-            Toast.makeText(MainActivity.this, "Position=" + position, Toast.LENGTH_SHORT).show();
             startDetailActivity(mDailyDataList.get(position));
         }
     };
