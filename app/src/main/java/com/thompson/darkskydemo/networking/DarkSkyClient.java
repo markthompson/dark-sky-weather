@@ -34,8 +34,12 @@ public final class DarkSkyClient {
         Call<DarkSkyForecast> getForecast(@Path("latlng") String latLng);
     }
 
-    public static DarkSkyAPIService getDarkSkyAPIService(String url) {
-        return createRetrofitInstance(url).create(DarkSkyAPIService.class);
+    public static DarkSkyAPIService getDarkSkyAPIService() {
+        return createRetrofitInstance(BASE_URL).create(DarkSkyAPIService.class);
+    }
+
+    public static DarkSkyAPIService getTestAPIServiceInstance() {
+        return createRetrofitInstance(BASE_URL).create(DarkSkyAPIService.class);
     }
 
     public static void getForecast(double lat, double lng, final DarkSkyCallback callback) {
@@ -45,7 +49,7 @@ public final class DarkSkyClient {
             return;
         }
 
-        Call<DarkSkyForecast> call = getDarkSkyAPIService(BASE_URL).getForecast(latLngToString(lat, lng));
+        Call<DarkSkyForecast> call = getDarkSkyAPIService().getForecast(latLngToString(lat, lng));
 
         call.enqueue(new Callback<DarkSkyForecast>() {
             @Override
@@ -89,7 +93,7 @@ public final class DarkSkyClient {
         void onSuccess(DarkSkyForecast darkSkyForecast, int HTTPCode);
     }
 
-    private static String latLngToString(double lat, double lng) {
+    public static String latLngToString(double lat, double lng) {
         return lat + "," + lng;
     }
 }
